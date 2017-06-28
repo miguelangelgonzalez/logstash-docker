@@ -1,0 +1,30 @@
+{
+  "template": "lcnext-*",
+  "settings": {
+	"number_of_shards" : 3,
+	"number_of_replicas" : 2
+  },
+   "mappings": {
+      "logging": {
+         "properties": {
+            "geoip": {
+                "dynamic": true,
+					"properties": {
+						"ip": {
+							"type": "ip"
+						},
+							"latitude": {
+							"type": "half_float"
+						},
+						"location": {
+							"type": "geo_point"
+						},
+						"longitude": {
+							"type": "half_float"
+						}
+				}
+			}
+         }
+      }
+   }
+}

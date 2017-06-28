@@ -1,0 +1,54 @@
+{
+  "template": "analytics-*",
+  "settings": {
+	"number_of_shards" : 3,
+	"number_of_replicas" : 2
+  },
+   "mappings": {
+      "report": {
+        "properties": {
+    			"Level": {
+    				"type": "text"
+    			},
+    			"LocalTime": {
+    				"type": "date"
+    			},
+    			"TimeZoneOffset": {
+    				"type": "double"
+    			},
+    			"Value": {
+    				"type": "double"
+    			},
+    			"Duration": {
+    				"type": "long"
+    			},
+    			"Quantity": {
+    				"type": "integer"
+    			},
+    			"GotFocus": {
+    				"type": "boolean"
+    			},
+    			"LostFocus": {
+    				"type": "boolean"
+    			},
+                "geoip": {
+                    "dynamic": true,
+    					"properties": {
+    						"ip": {
+    							"type": "ip"
+    						},
+    							"latitude": {
+    							"type": "half_float"
+    						},
+    						"location": {
+    							"type": "geo_point"
+    						},
+    						"longitude": {
+    							"type": "half_float"
+    						}
+    				}
+    			}
+             }
+          }
+   }
+}

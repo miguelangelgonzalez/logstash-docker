@@ -1,0 +1,28 @@
+{
+  "template": "monies-*",
+  "settings": {
+	"number_of_shards" : 3,
+	"number_of_replicas" : 2
+  },
+   "mappings": {
+      "monies": {
+        "properties": {
+			"Level": {
+				"type": "text"
+			},
+			"LocalTime": {
+				"type": "date"
+			},
+			"TimeZoneOffset": {
+				"type": "double"
+			},
+			"provider": {
+				"type": "text"
+			},
+			"operationId": {
+				"type": "text"
+			}
+		 }
+	  }
+   }
+}
