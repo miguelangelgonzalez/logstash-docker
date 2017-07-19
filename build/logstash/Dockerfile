@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 MAINTAINER Elastic Docker Team <docker@elastic.co>
 
-ARG ELASTIC_VERSION=5.3.1
+ARG ELASTIC_VERSION=5.5.0
 ARG LOGSTASH_DOWNLOAD_URL=https://artifacts.elastic.co/downloads/logstash/logstash-${ELASTIC_VERSION}.tar.gz
 #ARG LOGSTASH_PACK_URL
 ARG GEODB_DOWNLOAD_URL=http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
