@@ -43,9 +43,8 @@ RUN chown --recursive logstash:logstash /usr/share/logstash/config/ /usr/share/l
 RUN locale-gen en_US.UTF-8
 ENV LANG='en_US.UTF-8' LC_ALL='en_US.UTF-8'
 
-#Script that ensure map index in elasticsearch
-#ADD bin/docker-entrypoint.sh /usr/share/logstash/bin/docker-entrypoint.sh
-#RUN chmod 0755 /usr/share/logstash/bin/docker-entrypoint.sh
+ADD bin/docker-entrypoint.sh /usr/share/logstash/bin/docker-entrypoint.sh
+RUN chmod +x /usr/share/logstash/bin/docker-entrypoint.sh
 
 USER logstash
 
@@ -53,5 +52,5 @@ RUN cd /usr/share/logstash/bin && logstash-plugin install logstash-filter-transl
 
 EXPOSE 9600 5044
 
-ENTRYPOINT ["/usr/share/logstash/bin/logstash"]
+ENTRYPOINT ["/usr/share/logstash/bin/docker-entrypoint.sh"]
 CMD ["-f", "/usr/share/logstash/pipeline/"]

@@ -6,24 +6,30 @@
 # host system.
 #env2yaml /usr/share/logstash/config/logstash.yml
 
-if [ $ELASTICSEARCH_URL ]; then
-  if [ -z $DRY_RUN ]; then
-    # wait for elasticsearch to start up
-    ELASTIC_PATH=${ELASTICSEARCH_URL:-elasticsearch:9200}
-    echo "Configure ${ELASTIC_PATH}"
+# usage: file_env VAR [DEFAULT]
+#    ie: file_env 'XYZ_DB_PASSWORD' 'example'
+# (will allow for "$XYZ_DB_PASSWORD_FILE" to fill in the value of
+#  "$XYZ_DB_PASSWORD" from a file, especially for Docker's secrets feature)
+file_env() {
+	local var="$1"
+	local fileVar="${var}_FILE"
+	local def="${2:-}"
+	if [ "${!var:-}" ] && [ "${!fileVar:-}" ]; then
+		echo >&2 "error: both $var and $fileVar are set (but are exclusive)"
+		exit 1
+	fi
+	local val="$def"
+	if [ "${!var:-}" ]; then
+		val="${!var}"
+	elif [ "${!fileVar:-}" ]; then
+		val="$(< "${!fileVar}")"
+	fi
+	export "$var"="$val"
+	unset "$fileVar"
+}
 
-    counter=0
-    while [ ! "$(curl $ELASTIC_PATH 2> /dev/null)" -a $counter -lt 30  ]; do
-      sleep 1
-      let counter++
-      echo "waiting for Elasticsearch to be up ($counter/30)"
-    done
-
-    curl -XPUT "http://$ELASTIC_PATH/_template/lcnext" -d@/usr/share/logstash/map-templates/lcnext.json
-    curl -XPUT "http://$ELASTIC_PATH/_template/analytics" -d@/usr/share/logstash/map-templates/analytics.json
-    curl -XPUT "http://$ELASTIC_PATH/_template/monies" -d@/usr/share/logstash/map-templates/monies.json
-  fi
-fi
+file_env 'RABBITMQ_DEFAULT_PASS'
+file_env 'ELASTICSEARCH_URL'
 
 if [[ -z $1 ]] || [[ ${1:0:1} == '-' ]] ; then
   exec logstash "$@"
